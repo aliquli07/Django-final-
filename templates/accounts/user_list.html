@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+    <h1 class="h3 mb-4">Users</h1>
+
+    <div class="card table-card">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for target in users %}
+                        <tr>
+                            <td>{{ target.username }}</td>
+                            <td>{{ target.email }}</td>
+                            <td>
+                                {% if target.is_superuser %}
+                                    <span class="badge role-badge role-super">Super admin</span>
+                                {% elif target.is_staff %}
+                                    <span class="badge role-badge role-admin">Admin</span>
+                                {% else %}
+                                    <span class="badge role-badge role-user">User</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if target.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Blocked</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                {% if not target.is_superuser %}
+                                    <div class="d-flex justify-content-end gap-2">
+                                        {% if user.is_superuser %}
+                                            <form method="post" action="{% url 'accounts:toggle_admin' target.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                    {% if target.is_staff %}Remove admin{% else %}Make admin{% endif %}
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                        {% if not target.is_staff or user.is_superuser %}
+                                            <form method="post" action="{% url 'accounts:toggle_block' target.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                    {% if target.is_active %}Block{% else %}Unblock{% endif %}
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-secondary small">Protected</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-secondary py-4">No other users yet</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

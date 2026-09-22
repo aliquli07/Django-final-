@@ -1,0 +1,73 @@
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'articles:article_list' %}">
+            <i class="bi bi-braces-asterisk"></i> DevHub
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'articles:article_list' %}">Articles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'articles:popular_list' %}">Popular</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'articles:category_list' %}">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'articles:author_list' %}">Authors</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'articles:favorites_list' %}">Favorites</a>
+                    </li>
+                {% endif %}
+                {% if user.is_authenticated and user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'articles:pending_list' %}">
+                            <i class="bi bi-hourglass-split"></i> Review queue
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:user_list' %}">Users</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav align-items-lg-center gap-lg-2">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="btn btn-brand btn-sm" href="{% url 'articles:article_create' %}">
+                            <i class="bi bi-pencil-square"></i> Write
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'articles:author_detail' user.username %}">
+                            {{ user.username }}
+                            {% if user.is_superuser %}
+                                <span class="badge role-badge role-super">Super admin</span>
+                            {% elif user.is_staff %}
+                                <span class="badge role-badge role-admin">Admin</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-brand btn-sm" href="{% url 'accounts:register' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

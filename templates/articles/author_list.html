@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Authors{% endblock %}
+
+{% block content %}
+    <h1 class="h3 mb-4">Authors</h1>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for author in authors %}
+            <div class="col">
+                <a href="{% url 'articles:author_detail' author.username %}" class="category-card-link">
+                    <div class="card category-card h-100">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            {% if author.profile.avatar %}
+                                <img src="{{ author.profile.avatar.url }}" class="author-avatar" alt="{{ author.username }}">
+                            {% else %}
+                                <i class="bi bi-person-circle author-avatar-placeholder"></i>
+                            {% endif %}
+                            <div>
+                                <span class="fw-semibold d-block">{{ author.username }}</span>
+                                <span class="text-secondary small">{{ author.article_count }} article{{ author.article_count|pluralize }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p class="text-secondary">No authors yet</p>
+        {% endfor %}
+    </div>
+{% endblock %}

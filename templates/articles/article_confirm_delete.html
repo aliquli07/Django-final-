@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Article{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card form-card">
+                <div class="card-body p-4 p-md-5 text-center">
+                    <i class="bi bi-exclamation-triangle delete-icon"></i>
+                    <h1 class="h4 mt-3 mb-2">Delete "{{ article.title }}"?</h1>
+                    <p class="text-secondary mb-4">This action cannot be undone.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger w-100 mb-2">Delete article</button>
+                    </form>
+                    <a href="{% url 'articles:article_detail' article.id %}" class="btn btn-outline-secondary w-100">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

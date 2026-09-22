@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if mode == 'edit' %}Edit Article{% else %}Write Article{% endif %}{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card form-card">
+                <div class="card-body p-4 p-md-5">
+                    <h1 class="h3 mb-4">
+                        {% if mode == 'edit' %}Edit Article{% else %}Write Article{% endif %}
+                    </h1>
+
+                    {% if not user.is_staff %}
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            Your article will be reviewed by an admin before it is published.
+                        </div>
+                    {% endif %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-7 mb-3">
+                                <label for="{{ form.image.id_for_label }}" class="form-label">{{ form.image.label }}</label>
+                                {{ form.image }}
+                                {% if form.image.errors %}
+                                    <div class="text-danger small mt-1">{{ form.image.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-sm-5 mb-3">
+                                <label for="{{ form.category.id_for_label }}" class="form-label">{{ form.category.label }}</label>
+                                {{ form.category }}
+                                {% if form.category.errors %}
+                                    <div class="text-danger small mt-1">{{ form.category.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.content.id_for_label }}" class="form-label">{{ form.content.label }}</label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                                <div class="text-danger small mt-1">{{ form.content.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-brand flex-fill">
+                                {% if mode == 'edit' %}Save changes{% else %}Submit article{% endif %}
+                            </button>
+                            <a href="{% url 'articles:article_list' %}" class="btn btn-outline-secondary flex-fill">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
